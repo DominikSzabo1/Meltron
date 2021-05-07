@@ -26,8 +26,8 @@ library(ggpubr)
 - code/plot_rna_atac_over_meltingScore.R:  
    Plots expression and chromatin accessibility as a function of the melting score per cell-type. Density plots with median lines indicate population trends.   
 
-Developed and tested with R version 3.6.0 Planting of a Tree
-
+Developed and tested with R version 3.6.0 Planting of a Tree  
+Please get in touch for questions and issues: dominik.szabo at mdc-berlin.de  
 Command line tool that calculates melting scores for user-specified input is under development
 
 
