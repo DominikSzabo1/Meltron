@@ -28,11 +28,10 @@ library(ggpubr)
 
 Developed and tested with R version 3.6.0 Planting of a Tree
 
-Command line tool that calulates melting scores for user-specified input is under development
+Command line tool that calculates melting scores for user-specified input is under development
 
 
-Please check our [preprint](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1):
-
+Please check our [preprint](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1):  
 __Winick-Ng, W., Kukalev, A., Harabula, I., Zea Redondo, L., Szabo, D.:  
 Cell-type specialization in the brain is encoded by specific long-range chromatin topologies__
 
