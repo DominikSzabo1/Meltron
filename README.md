@@ -25,11 +25,6 @@ library(ggpubr)
    Plots empirical cumulative density functions (ECDF) for IS values of individual genes.   
 - domain_melting/plot_rna_atac_over_meltingScore.R:  
    Plots expression and chromatin accessibility as a function of the melting score per cell-type. Density plots with median lines indicate population trends.   
-- trans_cis_ratio/calculate_trans_cis_ratio.R:  
-   Calculates trans-cis NPMI ratios for GAM data genome-wide for all cell-types and replicates.   
-- trans_cis_ratio/plot_trans_cis_raincloud.R:  
-   Plots trans-cis ratio of long genes in the different cell-types stratified by melting.   
-
 
 Developed and tested with R version 3.6.0 Planting of a Tree
 
