@@ -8,13 +8,16 @@ _a statistical framework to detect differences in chromatin contact density at g
 
 <img src="./data/meltron_pipeline.png" width="900">
 
+<<<<<<< HEAD
 Deposited scripts allow to calculate the melting score of long genes in mouse oligodendroglia (OLG) from the somatosensory cortex, dopaminergic neurons (DNs) from the midbrain VTA and pyramidal glutamatergic neurons (PGNs) from the hippocampus CA1 relative to embryonic stem cells (ESCs).
+=======
+Deposited scripts and files for calculation of [melting scores](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1) of long genes in oligodendroglia (OLG) from the somatosensory cortex, dopaminergic neurons (DNs) from the midbrain VTA and pyramidal glutamatergic neurons (PGNs) from the hippocampus CA1 relative to embryonic stem cells (ESCs).
+>>>>>>> 6a69aec96b43f70ac4f59c948bc21aef6095df42
 
 
 ### Required packages
 ```r
 library(tidyverse)
-library(lemon)
 library(ggpubr)
 ```
 
@@ -26,14 +29,14 @@ library(ggpubr)
 - code/plot_rna_atac_over_meltingScore.R:  
    Plots expression and chromatin accessibility as a function of the melting score per cell-type. Density plots with median lines indicate population trends.   
 
-Developed and tested with R version 3.6.0 Planting of a Tree  
+Developed and tested with R version 3.6.0 Planting of a Tree.  
+Developend and maintained by Dominik Szabo with intellectual input from Christoph Thieme.  
 Please get in touch for questions and issues: dominik.szabo at mdc-berlin.de  
-Command line tool that calculates melting scores for user-specified input is under development
+Command line tool that calculates melting scores for user-specified input is under development  
 
-
-Please check our [preprint](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1):  
+Please check our preprint:  
 __Winick-Ng, W., Kukalev, A., Harabula, I., Zea Redondo, L., Szabo, D. et al.:  
-Cell-type specialization in the brain is encoded by specific long-range chromatin topologies__
+[Cell-type specialization in the brain is encoded by specific long-range chromatin topologies](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1)__
 
 
 
