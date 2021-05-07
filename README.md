@@ -32,7 +32,7 @@ Command line tool that calculates melting scores for user-specified input is und
 
 
 Please check our [preprint](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1):  
-__Winick-Ng, W., Kukalev, A., Harabula, I., Zea Redondo, L., Szabo, D.:  
+__Winick-Ng, W., Kukalev, A., Harabula, I., Zea Redondo, L., Szabo, D. et al.:  
 Cell-type specialization in the brain is encoded by specific long-range chromatin topologies__
 
 
