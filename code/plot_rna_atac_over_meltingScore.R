@@ -79,9 +79,12 @@ plot_rna <- function(celltype=c('OLG', 'DN_R1', 'DN_R2', 'PGN_R1', 'PGN_R2')){
   print(pval)
   return(together)
 }
-plot_rna(celltype='PGN_R2') # options: OLG, DN_R1, DN_R2, PGN_R1, PGN_R2
-
-
+plot_rna(celltype='PGN_R1') # options: OLG, DN_R1, DN_R2, PGN_R1, PGN_R2
+plot_rna(celltype='PGN_R2')
+plot_rna(celltype='DN_R1')
+plot_rna(celltype='DN_R2')  
+plot_rna(celltype='OLG')
+ 
 #ATAC over melting score
 plot_atac <- function(celltype=c('OLG', 'DN_R1', 'DN_R2', 'PGN_R1', 'PGN_R2')){
   if(celltype == 'OLG'){
@@ -146,4 +149,9 @@ plot_atac <- function(celltype=c('OLG', 'DN_R1', 'DN_R2', 'PGN_R1', 'PGN_R2')){
   print(pval)
   return(together)
 }
-plot_atac(celltype='OLG') # options: OLG, DN_R1, DN_R2, PGN_R1, PGN_R2
+plot_atac(celltype='PGN_R1') # options: OLG, DN_R1, DN_R2, PGN_R1, PGN_R2
+plot_atac(celltype='PGN_R2')
+plot_atac(celltype='DN_R1')
+plot_atac(celltype='DN_R2')  
+plot_atac(celltype='OLG')
+ 
