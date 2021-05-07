@@ -3,6 +3,13 @@
 library(tidyverse)
 library(ggpubr)
 
+#set working directory to the directory code is in, to make sure that files are found
+#for Rstudio:
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+#for command line R:
+#setwd(getSrcDirectory()[1])
+
 #read in files
 scores_red <- read_tsv('../data/melting_scores.tsv.gz')
 rna_atac <- read_tsv('../data/rna_atac.tsv.gz')

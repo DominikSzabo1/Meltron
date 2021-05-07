@@ -2,6 +2,13 @@
 
 library(tidyverse)
 
+#set working directory to the directory code is in, to make sure that files are found
+#for Rstudio:
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+#for command line R:
+#setwd(getSrcDirectory()[1])
+
 ##load data generated with smelte.R script
 #list that contains 
 load('../data/IS_values_perGene.RData')

@@ -3,6 +3,12 @@
 
 library(tidyverse)
 
+#set working directory to the directory code is in, to make sure that files are found
+#for Rstudio:
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+#for command line R:
+#setwd(getSrcDirectory()[1])
 
 #read in insulation scores (IS) at 10 different length scales (100 kb to 1000 kb in increments of 100 kb) in 4 cell types:
 ## mouse embryonic stem cells (ESC), oligodendroglia (OLG), dopaminergic neurons (DN) in two replicates, pyramidal glutamatergic neurons (PGN) in two replicates
