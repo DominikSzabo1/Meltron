@@ -162,7 +162,11 @@ plot_smooth_ecdf <- function(gene, celltype1=c('OLG', 'DN_R1', 'PGN_R1', 'all'),
 
 ###if you want to plot DN or PGN: R1 needs to be celltype1 and you need to specify corresponding R2 as celltype2
 #KS test is one-sided: negative distances between curves will not be calculated
-plot_smooth_ecdf(gene = 'Rbfox1', celltype1 = 'PGN_R1', celltype2 = 'PGN_R2', distance_label=TRUE)
-plot_smooth_ecdf(gene = 'Rbfox1', celltype1 = 'DN_R1', celltype2 = 'DN_R2', distance_label=TRUE)
-plot_smooth_ecdf(gene = 'Rbfox1', celltype1 = 'OLG', distance_label=TRUE)
-plot_smooth_ecdf(gene = 'Rbfox1', celltype1 = 'all', distance_label=TRUE)
+#Supplementary Data Figure 5 a examples:
+plot_smooth_ecdf(gene = 'Grik2', celltype1 = 'all', distance_label=FALSE) 
+plot_smooth_ecdf(gene = 'Grik2', celltype1 = 'PGN_R1', celltype2 = 'PGN_R2', distance_label=TRUE)
+plot_smooth_ecdf(gene = 'Dscam', celltype1 = 'DN_R1', celltype2 = 'DN_R2', distance_label=TRUE)
+plot_smooth_ecdf(gene = 'Magi2', celltype1 = 'OLG', distance_label=TRUE)
+#Main Figure 3 a + b examples:
+plot_smooth_ecdf(gene = 'Nrxn3', celltype1 = 'DN_R1', celltype2= 'DN_R2', distance_label=TRUE)
+plot_smooth_ecdf(gene = 'Rbfox1', celltype1 = 'PGN_R1', celltype2= 'PGN_R2', distance_label=TRUE)
