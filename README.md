@@ -19,11 +19,11 @@ library(ggpubr)
 ```
 
 ### Available scripts
-- domain_melting/MELTRON.R:   
+- code/MELTRON.R:   
    Compares insulation score (IS) distributions over long genes in OLGs, DNs, PGNs to ESCs and calculates melting score per gene.   
-- domain_melting/plot_ecdf.R:  
+- code/plot_ecdf.R:  
    Plots empirical cumulative density functions (ECDF) for IS values of individual genes.   
-- domain_melting/plot_rna_atac_over_meltingScore.R:  
+- code/plot_rna_atac_over_meltingScore.R:  
    Plots expression and chromatin accessibility as a function of the melting score per cell-type. Density plots with median lines indicate population trends.   
 
 Developed and tested with R version 3.6.0 Planting of a Tree
