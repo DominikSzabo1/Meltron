@@ -14,7 +14,6 @@ Deposited scripts and files allow to calculate the melting score of long genes i
 ### Required packages
 ```r
 library(tidyverse)
-library(lemon)
 library(ggpubr)
 ```
 
