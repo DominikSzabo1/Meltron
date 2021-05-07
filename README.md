@@ -10,7 +10,6 @@ _a statistical framework to detect differences in chromatin contact density at g
 
 Deposited scripts and files allow to calculate the melting score of long genes in oligodendroglia (OLG) from the somatosensory cortex, dopaminergic neurons (DNs) from the midbrain VTA and pyramidal glutamatergic neurons (PGNs) from the hippocampus CA1 relative to embryonic stem cells (ESCs).
 
-<img src="./data/melting_examples.png" width="900">
 
 ### Required packages
 ```r
