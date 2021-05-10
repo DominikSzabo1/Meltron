@@ -4,7 +4,7 @@ _a statistical framework to detect differences in chromatin contact density at g
 
 [![DOI:10.1101/2020.04.02.020990](http://img.shields.io/badge/DOI-10.1101/2020.04.02.020990-B31B1B.svg)](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1)
 
-<img src="data/IS_gif_2.gif" width="350">
+<img src="data/IS_gif.gif" width="350">
 
 <img src="./data/meltron_pipeline.png" width="900">
 
