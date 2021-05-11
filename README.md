@@ -25,7 +25,7 @@ library(ggpubr)
    Plots expression and chromatin accessibility as a function of the melting score per cell-type. Density plots with median lines indicate population trends.   
 
 Developed and tested with R version 3.6.0 Planting of a Tree.  
-Developend and maintained by Dominik Szabo <i class="fas fa-orcid"></i> with intellectual input from Christoph Thieme.  
+Developend and maintained by Dominik Szabo <span style="font-size: 3em; color: Tomato;"> <i class="fas fa-orcid"></i> with intellectual input from Christoph Thieme.  
 Please get in touch for questions and issues: dominik.szabo at mdc-berlin.de  
 Command line tool that calculates melting scores for user-specified input is under development  
 
