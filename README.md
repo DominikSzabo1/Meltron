@@ -2,7 +2,7 @@
 
 _a statistical framework to detect differences in chromatin contact density at genomic regions of interest_
 
-[//]: # [![DOI:10.1101/2020.04.02.020990](http://img.shields.io/badge/DOI-10.1101/2020.04.02.020990-B31B1B.svg)](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v3)
+[![DOI:10.1101/2020.04.02.020990](http://img.shields.io/badge/DOI-10.1101/2020.04.02.020990-B31B1B.svg)](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v3)
 
 <img src="data/IS_gif.gif" width="350">
 
@@ -29,9 +29,9 @@ Developend and maintained by Dominik Szabo [<img src="https://cloud.githubuserco
 Please get in touch for questions and issues: dominik.szabo at mdc-berlin.de  
 Command line tool that calculates melting scores for user-specified input is under development  
 
-[//]: # Please check our preprint:  
-[//]: # __Winick-Ng, W., Kukalev, A., Harabula, I., Zea Redondo, L., Szabo, D. et al.:  
-[//]: # [Cell-type specialization in the brain is encoded by specific long-range chromatin topologies](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v3)__
+[Please check our preprint:  
+__Winick-Ng, W., Kukalev, A., Harabula, I., Zea Redondo, L., Szabo, D. et al.:  
+[Cell-type specialization in the brain is encoded by specific long-range chromatin topologies](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v3)__
 
 
 
