@@ -1,8 +1,6 @@
-!#/usr/lib64/R 
-
-require(DescTools)
-require(data.table)
-require(stringr)
+suppressMessages(require(DescTools))
+suppressMessages(require(data.table))
+suppressMessages(require(stringr))
 
 
 main <- function() {
