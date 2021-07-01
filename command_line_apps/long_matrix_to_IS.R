@@ -8,7 +8,7 @@ parser <- arg_parser('Calculate insulation scores of a 3-column long matrix in a
 
 parser <- add_argument(parser, "--cores", type="integer", default=NULL,
                        help="Indicate how many cores should be used for computation. If not set, data.table reads environment variables and uses all ligcal CPUs available")
-parser <- add_argument(parser, "--outfile", default=getwd(),
+parser <- add_argument(parser, "--outfile", default=paste0(getwd(), '/IS_scores.tsv'),
                        help="Indicate path and filename to which output table should be saved")
 parser <- add_argument(parser, "--ISmin", short='--ISmin', type="integer", default=100000,  
                        help="Which is the smallest insulation square size in bp for which IS should be calculated")
@@ -54,8 +54,8 @@ main <- function() {
     matrix_long <- fread(file)
     
     #catch error if matrix has wrong format
-    if(dim(matrix_long)[2] > 3){
-      stop('matrix has more than 3 columns. input a matrix in A_start, B_start, value format')
+    if(dim(matrix_long)[2] != 3){
+      stop('matrix does not have 3 columns. Input a matrix in c(\"A_start\", \"B_start\", \"value\") format')
     }
     
     #rename or set column names
