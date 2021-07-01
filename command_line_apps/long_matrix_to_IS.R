@@ -25,7 +25,7 @@ main <- function() {
   args <- parse_args(parser)
   
   #catch error: no matrix supplied
-  if(is.na(args$input)){
+  if(is.na(args$input[1])){
     stop('NO input matrices supplied to function. Please specify at least one matrix in long format for calculation of IS ')
   }
   
@@ -97,7 +97,7 @@ main <- function() {
     
     #determine which chromosome is read in from filename
     splitted_filename <- str_split(file, "_")
-    chromosome_ID <- splitted_filename[[1]][str_detect(unlist(splitted_filename), 'chr')]
+    chromosome_ID <- splitted_filename[[1]][str_detect(unlist(splitted_filename), '^chr')]
     print(paste('Read in long format matrix of:', chromosome_ID, 'at', matrix_resolution_kb, 'kb resolution', 'from file:', file))
     
     #loop through all IS distances
@@ -146,7 +146,7 @@ main <- function() {
   #order by chrom, viewpoint and IS
   IS_table <- IS_table[order(rank(chrom), viewpoint, IS_distance)]
   
-  fwrite(IS_table, args$outfile, sep = '\t', na = 'NA', quote=FALSE)
+  fwrite(x = IS_table, file=args$outfile, sep = '\t', na = 'NA', quote=FALSE)
 }
   
 main()
