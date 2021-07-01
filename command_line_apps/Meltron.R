@@ -8,7 +8,7 @@ parser <- arg_parser('Calculates melting scores for supplied genomic intervals b
 
 parser <- add_argument(parser, "--cores", type="integer", default=NULL,
                        help="Indicate how many cores should be used for computation. If not set, data.table reads environment variables and uses all ligcal CPUs available")
-parser <- add_argument(parser, "--outfile", default=getwd(),
+parser <- add_argument(parser, "--outfile",  default=paste0(getwd(), '/melting_scores.tsv'),
                        help="Indicate path and filename to which output table should be saved")
 parser <- add_argument(parser, "--referenceIS", short='-r',
                        help="Indicate path to file that contains insulation scores of reference (usually ESC)")
@@ -105,7 +105,7 @@ main <- function() {
   #calculate melting score from corrected pval
   loop_out[, melting_score:= format(-log10(ks_pval_corrected), digits=1)]
   loop_out[, expected_values := (end - start) / matrix_resolution * length(unique(IS_table$IS_distance))]
-  loop_out[, percent_NAs := 1 - (number_compared_values / expected_values) ]
+  loop_out[, percent_NAs := format(1 - (number_compared_values / expected_values), digits=1) ]
   #recode melting scores to NA if more than given percentage of bins are missing/ would contain NA values
   loop_out[, melting_score  := fcase(percent_NAs > args$cutoff_NA, 'NA', 
                                      percent_NAs <= args$cutoff_NA, melting_score)]
