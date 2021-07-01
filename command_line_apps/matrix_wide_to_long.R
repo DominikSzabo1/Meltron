@@ -1,20 +1,27 @@
 suppressMessages(require(DescTools))
 suppressMessages(require(data.table))
 suppressMessages(require(stringr))
+suppressMessages(require(argparser))
+
+parser <- arg_parser('Convert a square matrix into a long one', hide.opts = TRUE)
+
+parser <- add_argument(parser, "--cores", type="integer", default=NULL,
+                       help="Indicate how many cores should be used for computation. If not set, data.table reads environment variables and uses all ligcal CPUs available")
+parser <- add_argument(parser, "--outfile", default=getwd(),
+                       help="Indicate path and filename to which output table should be saved")
+parser <- add_argument(parser, "--input", nargs=Inf,
+                       help='Specify the path to at least one square matrix or use wildcard \"*\" to process multiple chromosomes')
 
 
 main <- function() {
-  args <- commandArgs(trailingOnly = TRUE)
-  output_dir <- args[2]
-  print(output_dir[1])
-  filenames <- args[-1:-2]
-  print(filenames)
-  stopifnot(args[1] =='-o')
+  args <- parse_args(parser)
+  filenames <- args$input
   
   #catch error: no matrix supplied
-  if(length(args)==0){
-    stop('NO input matrices supplied to function. Please specify at least one square matrix that should be reformmatted to long format after the function call')
+  if(is.na(filenames[1])){
+    stop('NO input matrices supplied to function. Please specify at least one matrix in long format for calculation of IS ')
   }
+  
   #Print out how many matrices will be converted
   if(length(filenames)==1){
     print('1 matrix will be converted to long format')
@@ -78,7 +85,7 @@ main <- function() {
     filename_without_path <- unlist(lapply(str_split(filename, pattern='/'), tail, 1))
     filename_without_fileending <- unlist(lapply(str_split(filename_without_path, pattern='\\.'), head, 1))
     filename_chrom_and_res_specificiation <- paste(filename_without_fileending, chromosome_ID_A, matrix_resolution_kb, 'resolution.tsv.gz', sep='_')
-    filename_outpath = paste0(output_dir, filename_chrom_and_res_specificiation)
+    filename_outpath = paste0(args$outfile, filename_chrom_and_res_specificiation)
     
     #write to output directory
     #catch error: no writing permission in output directory
@@ -86,7 +93,6 @@ main <- function() {
       stop('no writing permission for the output directory')
     }
     fwrite(mat_long_three_column, filename_outpath, sep = '\t')
-    
   }
 
 }
