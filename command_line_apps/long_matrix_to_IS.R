@@ -8,7 +8,7 @@ parser <- arg_parser('Calculate insulation scores of a 3-column long matrix in a
 
 parser <- add_argument(parser, "--cores", type="integer", default=NULL,
                        help="Indicate how many cores should be used for computation. If not set, data.table reads environment variables and uses all ligcal CPUs available")
-parser <- add_argument(parser, "--outfile", default=paste0(getwd(), '/IS_scores.tsv'),
+parser <- add_argument(parser, "--outfile", default=paste0(getwd(), '/IS_values.tsv'),
                        help="Indicate path and filename to which output table should be saved")
 parser <- add_argument(parser, "--ISmin", short='--ISmin', type="integer", default=100000,  
                        help="Which is the smallest insulation square size in bp for which IS should be calculated")
