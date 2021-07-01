@@ -57,6 +57,7 @@ main <- function() {
     #Determine the matrix resolution
     matrix_resolution_A <- DescTools::GCD(unique(mat_long$A_start))
     matrix_resolution_B <- DescTools::GCD(unique(mat_long$B_start))
+    
     #catch error: no common devisor of Bins A and B
     if(matrix_resolution_A != matrix_resolution_B){
       stop('Start positions of bin A and bin B have no common devisor')
