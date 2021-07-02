@@ -1,6 +1,6 @@
 suppressMessages(require(DescTools))    
 suppressMessages(require(data.table))
-suppressMessages(require(stringr))
+#suppressMessages(require(stringr))
 suppressMessages(require(argparser))
 
 #parse arguments:
@@ -25,7 +25,7 @@ main <- function() {
   #catch error: no matrix supplied
   if(is.na(args$referenceIS[1]) |
      is.na(args$inputIS[1]) ){
-    stop('No input or reference insulation score supplied. Please use the -i and -r flags and specify paths to these files')
+    stop('No input or reference insulation score supplied. Please use the -i and -r flags and specify paths to these files or run \"Rscript Meltron.R --help\" to get help')
   }
   
   #catch error: no matrix supplied
