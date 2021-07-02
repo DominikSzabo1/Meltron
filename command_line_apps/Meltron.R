@@ -60,12 +60,14 @@ main <- function() {
   setnames(genomic_intervals, c('chrom', 'start', 'end', 'ID'))
   
   #merge IS tables of reference and input
-  IS_table <- merge(input_IS, reference_IS)
+  IS_table <- merge(input_IS, reference_IS, all=TRUE)
   rm(reference_IS, input_IS)
   
   
-  #Determine the matrix resolution
+  #Determine the matrix resolution and IS length scales
   matrix_resolution <- DescTools::GCD(unique(IS_table$viewpoint_start))
+  IS_sizes <- unique(IS_table$IS_distance)
+  n_IS_sizes <- length(IS_sizes)
   
   #catch error: matrix resolution is lower than 1000 bp 
   if(matrix_resolution < 1000){
@@ -79,37 +81,57 @@ main <- function() {
   
   
   #initialize a data frame to which mean contacts can be added
-  loop_out <- data.table(chrom = character(), start=integer(), end=integer(), ID = character(), ks_pval_raw=double(), number_compared_values=integer())
+  loop_out <- data.table(chrom = character(), start=integer(), end=integer(), ID = character(), ks_pval_raw=double(), perc_na_or_missing_ref=integer(), perc_na_or_missing_inp=integer())
   
   for(element in genomic_intervals$ID){
     element_row <- genomic_intervals[ID==element,]
     IS_table_subset <- IS_table[chrom==element_row$chrom &
                                 viewpoint_start >= element_row$start_bin &
                                 viewpoint_start < element_row$end_bin  ]
+    n_expected_bins <- (element_row$end_bin - element_row$start_bin) / matrix_resolution
+    n_expected_values <- n_expected_bins * n_IS_sizes
+    #when NA in both ref and inp, these entries would be missing from the table
+    missing <- n_expected_values - dim(IS_table_subset)[1] 
+    na_ref <- sum(is.na(IS_table_subset$IS_ref))
+    na_inp <- sum(is.na(IS_table_subset$IS_inp))
+    perc_na_or_missing_ref <- (missing + na_ref) / n_expected_values
+    perc_na_or_missing_inp <- (missing + na_inp) / n_expected_values
     
-    ks_pval_row <- ks.test(IS_table_subset$IS_ref,
-                      IS_table_subset$IS_inp,
-                      alternative = "less")$p.value
-    number_compared_values <- length(IS_table_subset$IS_ref)
-    
-    loop_out <- rbind(loop_out, list(chrom = element_row$chrom,
+    #only run KS test if more than x percent NAs in the genomic interval. rows are
+    if( args$cutoff_NA  >=  perc_na_or_missing_ref &
+        args$cutoff_NA  >=  perc_na_or_missing_inp){
+      
+      ks_pval_row <- ks.test(IS_table_subset$IS_ref,
+                             IS_table_subset$IS_inp,
+                             alternative = "less")$p.value
+#      number_compared_values_ref <- length(IS_table_subset$IS_ref)
+#     number_compared_values_inp <- length(IS_table_subset$IS_inp)
+
+      loop_out <- rbind(loop_out, list(chrom = element_row$chrom,
                                      start = element_row$start_bin,
                                      end = element_row$end_bin,
                                      ID = element_row$ID,
                                      ks_pval_raw = ks_pval_row,
-                                     number_compared_values = number_compared_values))
+                                     perc_na_or_missing_ref = sprintf(perc_na_or_missing_ref, fmt='%#.2f'),
+                                     perc_na_or_missing_inp = sprintf(perc_na_or_missing_inp, fmt='%#.2f')))
+    }
+    #if too many values missing => make pvalue NA
+    else{
+      loop_out <- rbind(loop_out, list(chrom = element_row$chrom,
+                                       start = element_row$start_bin,
+                                       end = element_row$end_bin,
+                                       ID = element_row$ID,
+                                       ks_pval_raw = NA,
+                                       perc_na_or_missing_ref = sprintf(perc_na_or_missing_ref, fmt='%#.2f'),
+                                       perc_na_or_missing_inp = sprintf(perc_na_or_missing_inp, fmt='%#.2f')))
+    }
   }
   
   #perform multiple testing correction
   loop_out[, ks_pval_corrected := p.adjust(ks_pval_raw, method = "bonferroni")]
   #calculate melting score from corrected pval
-  loop_out[, melting_score:= format(-log10(ks_pval_corrected), digits=1)]
-  loop_out[, expected_values := (end - start) / matrix_resolution * length(unique(IS_table$IS_distance))]
-  loop_out[, percent_NAs := format(1 - (number_compared_values / expected_values), digits=1) ]
-  #recode melting scores to NA if more than given percentage of bins are missing/ would contain NA values
-  loop_out[, melting_score  := fcase(percent_NAs > args$cutoff_NA, 'NA', 
-                                     percent_NAs <= args$cutoff_NA, melting_score)]
-  file_out <- loop_out[, .(chrom, start, end, ID, melting_score, percent_NAs)]
+  loop_out[, melting_score:= sprintf(-log10(ks_pval_corrected), fmt='%#.2f')]
+  file_out <- loop_out[, .(chrom, start, end, ID, melting_score, perc_na_or_missing_ref, perc_na_or_missing_inp)]
   
   fwrite(file_out, args$outfile, sep='\t', na='NA', quote=FALSE)
 }
