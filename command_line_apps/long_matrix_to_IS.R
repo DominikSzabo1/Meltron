@@ -8,8 +8,6 @@ parser <- arg_parser('Calculate insulation scores of a 3-column long matrix in a
 
 parser <- add_argument(parser, "--cores", type="integer", default=NULL,
                        help="Indicate how many cores should be used for computation. If not set, data.table reads environment variables and uses all ligcal CPUs available")
-parser <- add_argument(parser, "--outfile", default=paste0(getwd(), '/IS_values.tsv'),
-                       help="Indicate path and filename to which output table should be saved")
 parser <- add_argument(parser, "--ISmin", short='--ISmin', type="integer", default=100000,  
                        help="Which is the smallest insulation square size in bp for which IS should be calculated")
 parser <- add_argument(parser, "--ISmax", short='--ISmax', type="integer", default=1000000, 
@@ -18,6 +16,8 @@ parser <- add_argument(parser,"--ISsteps", short='--ISsteps', type="integer", de
                        help="How many different resolutions between ISmin and ISmax should be calculated")
 parser <- add_argument(parser, "--input", nargs=Inf,
                        help='Input at least one long matrix in c(\"A_start\", \"B_start\", \"value\") format or use wildcard \"*\" to process multiple chromosomes')
+parser <- add_argument(parser, "--outfile", default=paste0(getwd(), '/IS_values.tsv'),
+                       help="Indicate path and filename to which output table should be saved. Add '.gz' at end of filename to compress")
 
 
 
@@ -146,7 +146,7 @@ main <- function() {
   #order by chrom, viewpoint and IS
   IS_table <- IS_table[order(rank(chrom), viewpoint, IS_distance)]
   
-  fwrite(x = IS_table, file=args$outfile, sep = '\t', na = 'NA', quote=FALSE)
+  fwrite(x = IS_table, file=args$outfile, sep = '\t', na = 'NA', quote=FALSE, append = FALSE)
 }
   
 main()
