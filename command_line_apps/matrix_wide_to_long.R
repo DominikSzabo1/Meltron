@@ -8,7 +8,8 @@ parser <- arg_parser('Convert a square matrix into a long one', hide.opts = TRUE
 parser <- add_argument(parser, "--cores", type="integer", default=NULL,
                        help="Indicate how many cores should be used for computation. If not set, data.table reads environment variables and uses all ligcal CPUs available")
 parser <- add_argument(parser, "--outfile", default=getwd(),
-                       help="Indicate path and filename to which output table should be saved")
+                       help="For processing of multiple files: Indicate path to which output tables should be saved \n 
+                       If only a single file is processed, you can sepcify an path + filename")
 parser <- add_argument(parser, "--input", nargs=Inf,
                        help='Specify the path to at least one square matrix or use wildcard \"*\" to process multiple chromosomes')
 
