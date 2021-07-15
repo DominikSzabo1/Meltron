@@ -97,7 +97,7 @@ main <- function() {
     
     #determine which chromosome is read in from filename
     splitted_filename <- str_split(file, "_")
-    chromosome_ID <- splitted_filename[[1]][str_detect(unlist(splitted_filename), '^chr')]
+    chromosome_ID <- splitted_filename[[1]][str_detect(unlist(splitted_filename), '^chr')][1]
     print(paste('Read in long format matrix of:', chromosome_ID, 'at', matrix_resolution_kb, 'kb resolution', 'from file:', file))
     
     #loop through all IS distances
