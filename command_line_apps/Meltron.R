@@ -1,21 +1,24 @@
 suppressMessages(require(DescTools))    
 suppressMessages(require(data.table))
-#suppressMessages(require(stringr))
+suppressMessages(require(dplyr))
 suppressMessages(require(argparser))
+`%notin%` <- Negate(`%in%`)
 
 #parse arguments:
 parser <- arg_parser('Calculates melting scores for supplied genomic intervals by comparing insulation scores of one cell type versus another. Input and reference files need to be in c(\"chrom\", \"viewpoint\", \"IS_distance\" , \"IS\") format', hide.opts = TRUE)
 
 parser <- add_argument(parser, "--cores", type="integer", default=NULL,
                        help="Indicate how many cores should be used for computation. If not set, data.table reads environment variables and uses all ligcal CPUs available")
-parser <- add_argument(parser, "--outfile",  default=paste0(getwd(), '/melting_scores.tsv'),
-                       help="Indicate path and filename to which output table should be saved")
 parser <- add_argument(parser, "--referenceIS", short='-r',
                        help="Indicate path to file that contains insulation scores of reference (usually ESC)")
 parser <- add_argument(parser, "--inputIS", short='-i', 
                        help="Indicate path to file that contains insulation scores of input")
 parser <- add_argument(parser, "--genomicIntervals", short='-g', 
                        help="Indicate path to file that contains genomic intervals in c(\"chrom\", \"start\", \"end\", \"ID\") format")
+parser <- add_argument(parser, "--outfile",  default=paste0(getwd(), '/melting_scores.tsv'),
+                       help="Indicate path and filename to which output table should be saved")
+parser <- add_argument(parser, "--comparison",  default='decondensation',
+                       help="direction of comparison: please indicate 'decondensation' for detection of melting events or 'condensation' for chromatin compaction" )
 parser <- add_argument(parser, "--cutoff_NA", short='-c', default=0.5,
                        help="Indicate percentage (value between 0 and 0.99) of acceptable missing insulation score values. By default, melting scores of genomic intervals that contain more than 50% of missing values will not be computed")
 
@@ -41,6 +44,16 @@ main <- function() {
   if(file.create(args$outfile) == FALSE){
     stop('No writing permission in the --outfile directory')
   }
+  
+  #catch error if args$comparison doesn' match naming requirements:
+  if(args$comparison %notin% c('decondensation','condensation')){
+    stop("--comparison parametermust be set to either 'condensation' or 'decondensation'")
+  }
+  #direction of comparison: set side of comparison for KS test and set the name of the column of the outfile:
+  comparison_direction <- case_when(args$comparison == 'decondensation' ~ 'less',
+                                    args$comparison == 'condensation' ~ 'greater')
+  
+  
   
   #read in files:
   reference_IS <- fread(args$referenceIS)
@@ -101,9 +114,9 @@ main <- function() {
     if( args$cutoff_NA  >=  perc_na_or_missing_ref &
         args$cutoff_NA  >=  perc_na_or_missing_inp){
       
-      ks_pval_row <- ks.test(IS_table_subset$IS_ref,
+      suppressWarnings(ks_pval_row <- ks.test(IS_table_subset$IS_ref,
                              IS_table_subset$IS_inp,
-                             alternative = "less")$p.value
+                             alternative = comparison_direction)$p.value)
 #      number_compared_values_ref <- length(IS_table_subset$IS_ref)
 #     number_compared_values_inp <- length(IS_table_subset$IS_inp)
 
@@ -129,9 +142,15 @@ main <- function() {
   
   #perform multiple testing correction
   loop_out[, ks_pval_corrected := p.adjust(ks_pval_raw, method = "bonferroni")]
+  
+  #name variable according to direction of comparison
+  score_variable_name <- case_when(comparison_direction == 'less' ~ quote('melting_score'),
+                                   comparison_direction == 'greater' ~ quote('compaction_score'))
+  
   #calculate melting score from corrected pval
-  loop_out[, melting_score:= sprintf(-log10(ks_pval_corrected), fmt='%#.2f')]
-  file_out <- loop_out[, .(chrom, start, end, ID, melting_score, perc_na_or_missing_ref, perc_na_or_missing_inp)]
+  loop_out[, score:= sprintf(-log10(ks_pval_corrected), fmt='%#.2f')]
+  file_out <- loop_out[, .(chrom, start, end, ID, score, perc_na_or_missing_ref, perc_na_or_missing_inp)]
+  setnames(file_out, old = 'score', new=eval(score_variable_name))
   
   fwrite(file_out, args$outfile, sep='\t', na='NA', quote=FALSE)
 }
