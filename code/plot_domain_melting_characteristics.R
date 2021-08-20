@@ -66,7 +66,71 @@ chisq.test(table)
 
 
 #ED5g heatmaps per cell type
+#universal heatmap colors:
+col_runif_rna = colorRamp2(c(0.4, 2, 3.4), c('blue', "white", "red"))
+col_runif_atac = colorRamp2(c(2,2.7,3.2), c('blue', "white", "red"))
+col_black_white = colorRamp2(c(0,100), c('white', 'grey30'))
+col_transcis <- colorRamp2(c(-100,0,100), c('blue', "white", "red"))
+col_discr = structure(c('#009E73', '#F0E442'), names = c("interior", "periphery")) # black, red, green, blue
+
 #OLG
+esc_olig <- melting_scores %>% 
+  dplyr::filter(meltingScore_OLGs > 5) %>% 
+  dplyr::arrange( ESC_compartment, OLG_compartment)
+esc_olig <- rowid_to_column(esc_olig)
+
+col_runif_melting_olig = colorRamp2(c(0, 107), c("white", "#800080"))
+plot_data1 <- as.matrix(esc_olig[,c('ESC_compartment', 'OLG_compartment') ])
+plot_data2 <- as.matrix(esc_olig[,c('meltingScore_OLGs') ])
+plot_data3 <- log10(as.matrix(esc_olig[,c('rnaRPMM_ESC', 'rnaRPMM_OLGs')]))
+plot_data4 <-  as.matrix(esc_olig[,c('percent_genebody_lad', 'percent_genebody_nad')])
+plot_data4[is.na(plot_data4)] <- 0
+plot_data5 <- log10(as.matrix(esc_olig[,c('atacRPMM_ESC', 'atacRPMM_OLGs')]))
+
+rownames(plot_data2) <- esc_olig$gene_symbol
+compartments_h <- Heatmap(plot_data1, col=c('#9E31DA', '#929292',  '#F49D1F'), heatmap_legend_param=list(title='Compartment'), cluster_rows = FALSE)
+meltingscore <- Heatmap(plot_data2, col=col_runif_melting_olig, heatmap_legend_param=list(title='Melting score'),cluster_columns = FALSE, cluster_rows = FALSE, row_names_gp = gpar(fontsize = 9))
+rpkm_h <- Heatmap(plot_data3, col=col_runif_rna, heatmap_legend_param=list(title='RPMM'), name='rpmm', cluster_columns = FALSE, row_km = 4,  row_km_repeats = 1000, cluster_row_slices = FALSE, cluster_rows = FALSE)
+loc_pos <-  Heatmap(plot_data4, col=col_black_white, cluster_columns=FALSE, cluster_rows=FALSE, heatmap_legend_param=list(title='periphery assoc [%]'))
+atac_h <- Heatmap(plot_data5, col=col_runif_atac, heatmap_legend_param=list(title='atac RPMM'), cluster_columns = FALSE, cluster_rows = FALSE)
+ht_list <- rpkm_h + atac_h + compartments_h + loc_pos + meltingscore 
+draw(ht_list, ht_gap=unit(0, 'cm'), merge_legends = TRUE, heatmap_legend_side = "bottom")
+dev.off()
+
+olig_toplot <- melting_scores %>% 
+  drop_na(OLG_cluster_ident) %>% 
+  dplyr::mutate(OLG_cluster_ident = as.character(OLG_cluster_ident))
+
+#log2FC of RNA per cluster
+olig_toplot %>% 
+  ggplot()+
+  geom_violin(aes(x=OLG_cluster_ident, y=rnaRPMM_l2FC_OLGs))+
+  geom_boxplot(aes(x=OLG_cluster_ident, y=rnaRPMM_l2FC_OLGs), outlier.shape = NA, width=0.1)+
+  geom_jitter(aes(x=OLG_cluster_ident, y=rnaRPMM_l2FC_OLGs), size=0.5, width=0.2)+ 
+  geom_hline(yintercept = 0, linetype='dotted')
+#log2FC of ATAC per cluster
+olig_toplot %>% 
+  ggplot()+
+  geom_violin(aes(x=OLG_cluster_ident, y=atacRPMM_l2FC_OLGs))+
+  geom_boxplot(aes(x=OLG_cluster_ident, y=atacRPMM_l2FC_OLGs), outlier.shape = NA, width=0.2)+
+  geom_jitter(aes(x=OLG_cluster_ident, y=atacRPMM_l2FC_OLGs), size=0.5, width=0.2)+
+  geom_hline(yintercept = 0, linetype='dotted')
+#melting score per cluster
+olig_toplot %>% 
+  ggplot()+
+  geom_violin(aes(x=OLG_cluster_ident, y=meltingScore_OLGs))+
+  geom_boxplot(aes(x=OLG_cluster_ident, y=meltingScore_OLGs), outlier.shape = NA, width=0.1)+
+  geom_jitter(aes(x=OLG_cluster_ident, y=meltingScore_OLGs), size=0.5, width=0.2)
+#compartment transition
+olig_toplot %>% 
+  group_by(OLG_cluster_ident, OLG_comp_transition) %>% 
+  summarise(n=n()) %>%
+  dplyr::filter(!is.na(OLG_comp_transition)) %>% 
+  dplyr::mutate(percent= n/ sum(n)) %>% 
+  ggplot()+
+  geom_col(aes(x=OLG_cluster_ident, y=percent, fill=OLG_comp_transition), position = 'dodge')+
+  labs(fill = "transition")+
+  scale_fill_manual(values=c('A -> A' = '#9E31DA', 'A -> B' ='#825515','B -> A' =   '#c88ee8', 'B -> B' = '#F49D1F'))
 
 
 #DN combined
@@ -76,11 +140,6 @@ esc_dn <- melting_scores %>%
 esc_dn <- rowid_to_column(esc_dn)
 
 col_runif_melting_vta = colorRamp2(c(0, 70), c("white", "#259A37"))
-col_runif_rna = colorRamp2(c(0.4, 2, 3.4), c('blue', "white", "red"))
-col_runif_atac = colorRamp2(c(2,2.7,3.2), c('blue', "white", "red"))
-col_black_white = colorRamp2(c(0,100), c('white', 'grey30'))
-col_transcis <- colorRamp2(c(-100,0,100), c('blue', "white", "red"))
-col_discr = structure(c('#009E73', '#F0E442'), names = c("interior", "periphery")) # black, red, green, blue
 plot_data1 <- as.matrix(esc_dn[,c('ESC_compartment', 'DN_R1_compartment', 'DN_R2_compartment') ])
 plot_data2 <- as.matrix(esc_dn[,c('meltingScore_DN_R1', 'meltingScore_DN_R2')])
 plot_data3 <- log10(as.matrix(esc_dn[,c('rnaRPMM_ESC','rnaRPMM_DN') ]))
