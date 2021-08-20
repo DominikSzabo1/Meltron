@@ -1,4 +1,9 @@
 ## plot expression and chromatin accessability over the melting score per gene
+#script used for plotting of figures 2h + 2i (RNA/ATAC over melting score in OLG, DN_R1 and PGN_R1)
+# supplementary figures 5d+e (RNA/ATAC over melting score in DN_R2 and PGN_R2)
+# and supplementary figure 5c (correlation of melting scores in DN/PGN mouse replicates)
+
+
 
 library(tidyverse)
 library(ggpubr)
@@ -14,6 +19,10 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 scores_red <- read_tsv('../data/melting_scores.tsv.gz')
 rna_atac <- read_tsv('../data/rna_atac.tsv.gz')
 scores_expr_mod <- left_join(scores_red, rna_atac)
+
+
+
+
 
 #RNA over melting score
 plot_rna <- function(celltype=c('OLG', 'DN_R1', 'DN_R2', 'PGN_R1', 'PGN_R2')){
