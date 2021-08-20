@@ -363,12 +363,80 @@ ggarrange(a,
           e+theme(axis.title.y = element_blank(), axis.text.y = element_blank()), 
           nrow=1 )
 
-test_results <- tibble(comp = c('olg', 'pgn_r1', 'pgn_r2', 'dn_r1', 'dn_r2'),
+test_results_lad <- tibble(comp = c('olg', 'pgn_r1', 'pgn_r2', 'dn_r1', 'dn_r2'),
                        pval = c(fisher.test(rbind(c(138,188),c(89,64)))$p.value,
                                 fisher.test(rbind(c(165,171),c(62,81)))$p.value,
                                 fisher.test(rbind(c(175,181),c(52,71)))$p.value,
                                 fisher.test(rbind(c(144,192),c(83,60)))$p.value,
                                 fisher.test(rbind(c(122,179),c(105,73)))$p.value))
-p.adjust(test_results$pval, method = 'hochberg')
+p.adjust(test_results_lad$pval, method = 'hochberg')
 
 ##NAD association of melting/non-melting genes:
+#OLG
+f <- melting_scores %>% 
+  group_by(OLG_melting,nad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(OLG_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(nad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#de6fde', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#800080'))+
+  xlab('melting')+ ylab('percent')
+#PGN R1 
+g <- melting_scores %>% 
+  group_by(PGN_R1_melting,nad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(PGN_R1_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(nad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#9c9ff0', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#6367DC'))+
+  xlab('melting')
+#NAD CA1 R2
+h <- melting_scores %>% 
+  group_by(PGN_R2_melting,nad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(PGN_R2_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(nad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#9c9ff0', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#6367DC'))+
+  xlab('melting')
+#NAD VTA R1 
+i <- melting_scores %>% 
+  group_by(DN_R1_melting,nad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(DN_R1_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(nad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#95e6a1', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#259A37'))+
+  xlab('melting')
+#NAD VTA R2
+j <- melting_scores %>% 
+  group_by(DN_R2_melting,nad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(DN_R2_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(nad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#95e6a1', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#259A37'))+
+  xlab('melting')
+ggarrange(f,
+          g+theme(axis.title.y = element_blank(), axis.text.y = element_blank()),
+          h+theme(axis.title.y = element_blank(), axis.text.y = element_blank()),
+          i+theme(axis.title.y = element_blank(), axis.text.y = element_blank()),
+          j+theme(axis.title.y = element_blank(), axis.text.y = element_blank()), 
+          nrow=1 )
+test_results_nad <- tibble(comp = c('olg', 'pgn_r1', 'pgn_r2', 'dn_r1', 'dn_r2'),
+                           pval = c(fisher.test(rbind(c(167,159),c(101,52)))$p.value,
+                                    fisher.test(rbind(c(165,171),c(62,81)))$p.value,
+                                    fisher.test(rbind(c(175,181),c(52,71)))$p.value,
+                                    fisher.test(rbind(c(178,158),c(90,53)))$p.value,
+                                    fisher.test(rbind(c(154,147),c(114,64)))$p.value))
+p.adjust(test_results_nad$pval, method = 'hochberg')
