@@ -133,6 +133,85 @@ olig_toplot %>%
   scale_fill_manual(values=c('A -> A' = '#9E31DA', 'A -> B' ='#825515','B -> A' =   '#c88ee8', 'B -> B' = '#F49D1F'))
 
 
+#PGNs: 
+esc_ca1 <- melting_scores %>% 
+  dplyr::filter(meltingScore_PGN_R1 > 5|  meltingScore_PGN_R2 >5) %>% # | meltingScore_PGN_R2 >5
+  dplyr::mutate(DN_cluster_ident = as.character(DN_cluster_ident)) %>% 
+  dplyr::arrange(ESC_compartment, PGN_R1_compartment, PGN_R2_compartment)
+esc_ca1 <- rowid_to_column(esc_ca1)
+
+col_runif_melting_ca1 = colorRamp2(c(0, 90), c("white", "#6367DC"))
+col_runif_rna_ca1 = colorRamp2(c(0.4, 2, 3.6), c('blue', "white", "red"))
+col_runif_atac_ca1 = colorRamp2(c(2,2.7,3.4), c('blue', "white", "red"))
+plot_data1 <- as.matrix(esc_ca1[,c('ESC_compartment', 'PGN_R1_compartment', 'PGN_R2_compartment') ])
+plot_data2 <- as.matrix(esc_ca1[,c('meltingScore_PGN_R1', 'meltingScore_PGN_R2') ])
+plot_data3 <- log10(as.matrix(esc_ca1[,c('rnaRPMM_ESC', 'rnaRPMM_PGN')]))
+plot_data4 <- as.matrix(esc_ca1[,c('percent_genebody_lad', 'percent_genebody_nad')])
+plot_data4[is.na(plot_data4)] <- 0
+plot_data5 <- log10(as.matrix(esc_ca1[,c('atacRPMM_ESC', 'atacRPMM_PGN')]))
+
+rownames(plot_data2) <- esc_ca1$gene_symbol
+compartments_h <- Heatmap(plot_data1, col=c('#9E31DA', '#929292',  '#F49D1F'), heatmap_legend_param=list(title='Compartment'), cluster_rows=FALSE)
+#compartments_ca1 <- Heatmap(plot_data15, col=c('#9E31DA', '#929292',  '#F49D1F'), heatmap_legend_param=list(title='Compartment')) #, width = unit(2, "cm")
+meltingscore <- Heatmap(plot_data2, col=col_runif_melting_ca1, heatmap_legend_param=list(title='Melting score'),cluster_columns = FALSE, cluster_rows=FALSE, row_names_gp = gpar(fontsize = 7))
+rpkm_h <- Heatmap(plot_data3, col=col_runif_rna_ca1, heatmap_legend_param=list(title='RPMM'), name='rpmm', cluster_columns = FALSE, row_km = 4,  row_km_repeats = 1000, cluster_row_slices = FALSE, cluster_rows = FALSE)
+loc_pos <- Heatmap(plot_data4, col=col_black_white, cluster_rows=FALSE, cluster_columns = FALSE,  heatmap_legend_param=list(title='periphery assoc [%]'))
+atac_h <- Heatmap(plot_data5, col=col_runif_atac_ca1, heatmap_legend_param=list(title='atac RPKM'), cluster_columns = FALSE, cluster_rows=FALSE)
+ht_list <- rpkm_h + atac_h + compartments_h + loc_pos + meltingscore 
+draw(ht_list, ht_gap=unit(0, 'cm'), merge_legends = TRUE, heatmap_legend_side = "bottom")
+dev.off()
+
+ca1_toplot <- melting_scores %>% 
+  drop_na(PGN_cluster_ident) %>% 
+  dplyr::mutate(PGN_cluster_ident = as.character(PGN_cluster_ident))
+
+#log2FC of RNA per cluster
+ca1_toplot %>% 
+  ggplot()+
+  geom_violin(aes(x=PGN_cluster_ident, y=rnaRPMM_l2FC_PGNs))+
+  geom_boxplot(aes(x=PGN_cluster_ident, y=rnaRPMM_l2FC_PGNs), outlier.shape = NA, width=0.1)+
+  geom_jitter(aes(x=PGN_cluster_ident, y=rnaRPMM_l2FC_PGNs), size=0.5, width=0.2)+ 
+  geom_hline(yintercept = 0, linetype='dotted')
+#log2FC of ATAc per cluster
+ca1_toplot %>% 
+  ggplot()+
+  geom_violin(aes(x=PGN_cluster_ident, y=atacRPMM_l2FC_PGNs))+
+  geom_boxplot(aes(x=PGN_cluster_ident, y=atacRPMM_l2FC_PGNs), outlier.shape = NA, width=0.2)+
+  geom_jitter(aes(x=PGN_cluster_ident, y=atacRPMM_l2FC_PGNs), size=0.5, width=0.2)+
+  geom_hline(yintercept = 0, linetype='dotted')
+
+#melting score per cluster
+ca1_toplot %>% 
+  ggplot()+
+  geom_violin(aes(x=PGN_cluster_ident, y=meltingScore_PGN_R1))+
+  geom_boxplot(aes(x=PGN_cluster_ident, y=meltingScore_PGN_R1), outlier.shape = NA, width=0.1)+
+  geom_jitter(aes(x=PGN_cluster_ident, y=meltingScore_PGN_R1), size=0.5, width=0.2)
+ca1_toplot %>% 
+  ggplot()+
+  geom_violin(aes(x=PGN_cluster_ident, y=meltingScore_PGN_R2))+
+  geom_boxplot(aes(x=PGN_cluster_ident, y=meltingScore_PGN_R2), outlier.shape = NA, width=0.1)+
+  geom_jitter(aes(x=PGN_cluster_ident, y=meltingScore_PGN_R2), size=0.5, width=0.2)
+
+#compartment transition
+ca1_toplot %>% 
+  group_by(PGN_cluster_ident, PGN_R1_comp_transition) %>% 
+  summarise(n=n()) %>%
+  dplyr::filter(!is.na(PGN_R1_comp_transition)) %>% 
+  dplyr::mutate(percent= n/ sum(n)) %>% 
+  ggplot()+
+  geom_col(aes(x=PGN_cluster_ident, y=percent, fill=PGN_R1_comp_transition), position = 'dodge')+
+  labs(fill = "transition")+
+  scale_fill_manual(values=c('A -> A' = '#9E31DA', 'A -> B' ='#825515','B -> A' =   '#c88ee8', 'B -> B' = '#F49D1F'))
+ca1_toplot %>% 
+  group_by(PGN_cluster_ident, PGN_R2_comp_transition, .drop=FALSE) %>% 
+  summarise(n=n()) %>%
+  dplyr::filter(!is.na(PGN_R2_comp_transition)) %>% 
+  dplyr::mutate(percent= n/ sum(n)) %>% 
+  ggplot()+
+  geom_col(aes(x=PGN_cluster_ident, y=percent, fill=PGN_R2_comp_transition), position = 'dodge')+
+  labs(fill = "transition")+
+  scale_fill_manual(values=c('A -> A' = '#9E31DA', 'A -> B' ='#825515','B -> A' =   '#c88ee8', 'B -> B' = '#F49D1F'))
+
 #DN combined
 esc_dn <- melting_scores %>% 
   dplyr::filter(meltingScore_DN_R1 > 5 | meltingScore_DN_R2 > 5) %>% # meltingScore_DN_R2 > 5
