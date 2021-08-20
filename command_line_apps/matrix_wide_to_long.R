@@ -85,9 +85,10 @@ main <- function() {
     
     #generate filename:
     filename_without_path <- unlist(lapply(str_split(filename, pattern='/'), tail, 1))
-    filename_without_fileending <- unlist(lapply(str_split(filename_without_path, pattern='\\.'), head, 1))
-    filename_chrom_and_res_specificiation <- paste(filename_without_fileending, chromosome_ID_A, matrix_resolution_kb, 'resolution.tsv.gz', sep='_')
-    filename_outpath = paste0(args$outfile, filename_chrom_and_res_specificiation)
+    #filename_without_fileending <- unlist(lapply(str_split(filename_without_path, pattern='\\.'), head, 1))
+    filename_long_format <- paste(filename_without_path, 'long.tsv.gz', sep="_")
+    #filename_chrom_and_res_specificiation <- paste(filename_without_fileending, chromosome_ID_A, matrix_resolution_kb, 'resolution.tsv.gz', sep='_')
+    filename_outpath = paste0(args$outfile, filename_long_format)
     
     #write to output directory
     #catch error: no writing permission in output directory
