@@ -22,7 +22,12 @@ melting_scores <- read_tsv('../data/master_table_long_genes_withClustIdent.tsv.g
                 rnaRPMM_l2FC_OLGs = log2(rnaRPMM_OLGs) - log2(rnaRPMM_ESC),
                 atacRPMM_l2FC_DNs = log2(atacRPMM_DN) - log2(atacRPMM_ESC),
                 atacRPMM_l2FC_PGNs = log2(atacRPMM_PGN) - log2(atacRPMM_ESC),
-                atacRPMM_l2FC_OLGs = log2(atacRPMM_OLGs) - log2(atacRPMM_ESC)) %>% 
+                atacRPMM_l2FC_OLGs = log2(atacRPMM_OLGs) - log2(atacRPMM_ESC),
+                DN_R1_melting = if_else(meltingScore_DN_R1 > 5, TRUE, FALSE),
+                DN_R2_melting = if_else(meltingScore_DN_R2 > 5, TRUE, FALSE),
+                PGN_R1_melting = if_else(meltingScore_PGN_R1 > 5, TRUE, FALSE),
+                PGN_R2_melting = if_else(meltingScore_PGN_R2 > 5, TRUE, FALSE),
+                OLG_melting = if_else(meltingScore_OLGs > 5, TRUE, FALSE)) %>% 
   dplyr::mutate_at(c('DN_R1_comp_transition', 'DN_R2_comp_transition', 'PGN_R1_comp_transition', 'PGN_R2_comp_transition', 'OLG_comp_transition'), factor, levels=c('B -> B', 'A -> B', 'B -> A', 'A -> A'))
 
 
@@ -290,3 +295,80 @@ vta_toplot %>%
   labs(fill = "transition")+
   scale_fill_manual(values=c('A -> A' = '#9E31DA', 'A -> B' ='#825515','B -> A' =   '#c88ee8', 'B -> B' = '#F49D1F'))
 
+
+
+##LAD association of melting/non-melting genes:
+#OLG
+a <- melting_scores %>% 
+  group_by(OLG_melting,lad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(OLG_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(lad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#de6fde', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#800080'))+
+  xlab('melting') + ylab('percent')
+
+#CA1 R1 LAD50
+b <- melting_scores %>% 
+  group_by(PGN_R1_melting,lad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(PGN_R1_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(lad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#9c9ff0', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#6367DC'))+
+  xlab('melting')
+#CA1 R2 LAD50
+c <- melting_scores %>% 
+  group_by(PGN_R1_melting,lad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(PGN_R1_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(lad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#9c9ff0', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#6367DC'))+
+  xlab('melting')
+
+#VTA R1 LAD50
+d <- melting_scores %>% 
+  group_by(DN_R1_melting,lad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(DN_R1_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(lad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#95e6a1','grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#259A37'))+
+  xlab('melting')
+#VTA R2 LAD50
+e <- melting_scores %>% 
+  group_by(DN_R2_melting,lad_assoc50) %>% summarise(n=n()) %>%  
+  dplyr::mutate(percent= n/ sum(n),
+                melting = factor(DN_R2_melting, levels=c(TRUE, FALSE))) %>% 
+  dplyr::filter(lad_assoc50 ==TRUE) %>% 
+  ggplot() + 
+  geom_col(aes(x=c(TRUE,FALSE), y=1), fill=c('#95e6a1', 'grey90'))+
+  scale_x_discrete(limits = c(TRUE, FALSE))+
+  geom_col(aes(x=melting, y=percent), fill=c('grey50','#259A37'))+
+  xlab('melting')
+
+ggarrange(a,
+          b+theme(axis.title.y = element_blank(), axis.text.y = element_blank()),
+          c+theme(axis.title.y = element_blank(), axis.text.y = element_blank()),
+          d+theme(axis.title.y = element_blank(), axis.text.y = element_blank()),
+          e+theme(axis.title.y = element_blank(), axis.text.y = element_blank()), 
+          nrow=1 )
+
+test_results <- tibble(comp = c('olg', 'pgn_r1', 'pgn_r2', 'dn_r1', 'dn_r2'),
+                       pval = c(fisher.test(rbind(c(138,188),c(89,64)))$p.value,
+                                fisher.test(rbind(c(165,171),c(62,81)))$p.value,
+                                fisher.test(rbind(c(175,181),c(52,71)))$p.value,
+                                fisher.test(rbind(c(144,192),c(83,60)))$p.value,
+                                fisher.test(rbind(c(122,179),c(105,73)))$p.value))
+p.adjust(test_results$pval, method = 'hochberg')
+
+##NAD association of melting/non-melting genes:
