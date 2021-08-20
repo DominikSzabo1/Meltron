@@ -2,6 +2,7 @@
 #script used for plotting of figures 2h + 2i (RNA/ATAC over melting score in OLG, DN_R1 and PGN_R1)
 # supplementary figures 5d+e (RNA/ATAC over melting score in DN_R2 and PGN_R2)
 # and supplementary figure 5c (correlation of melting scores in DN/PGN mouse replicates)
+# when plot_atac()/plot_rna() are executed, a two-sided wilcoxon test is executed and p-value is printed to console
 
 
 
@@ -20,8 +21,21 @@ scores_red <- read_tsv('../data/melting_scores.tsv.gz')
 rna_atac <- read_tsv('../data/rna_atac.tsv.gz')
 scores_expr_mod <- left_join(scores_red, rna_atac)
 
-
-
+#correlate melting scores between replicates:
+#PGN
+scores_red %>% 
+  ggplot() +
+  geom_point(aes(x=meltingScore_PGN_R2, y=meltingScore_PGN_R1, color = (meltingScore_PGN_R2 > 5 & meltingScore_PGN_R1 >5)))+
+  geom_hline(yintercept = 5, linetype='dotted') + geom_vline(xintercept = 5, linetype='dotted')+
+  scale_color_manual(values = c('grey60', '#6367DC'), name = 'melting in both replicates')
+cor.test(scores_red$meltingScore_PGN_R2, scores_red$meltingScore_PGN_R1)
+#DN
+scores_red %>% 
+  ggplot() +
+  geom_point(aes(x=meltingScore_DN_R2, y=meltingScore_DN_R1, color = (meltingScore_DN_R2 > 5 & meltingScore_DN_R1 >5)))+
+  geom_hline(yintercept = 5, linetype='dotted') + geom_vline(xintercept = 5, linetype='dotted')+
+  scale_color_manual(values = c('grey60', '#259A37'), name = 'melting in both replicates')
+cor.test(scores_red$meltingScore_DN_R2, scores_red$meltingScore_DN_R1)
 
 
 #RNA over melting score
