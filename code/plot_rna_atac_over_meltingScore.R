@@ -4,8 +4,6 @@
 # and supplementary figure 5c (correlation of melting scores in DN/PGN mouse replicates)
 # when plot_atac()/plot_rna() are executed, a two-sided wilcoxon test is executed and p-value is printed to console
 
-
-
 library(tidyverse)
 library(ggpubr)
 
