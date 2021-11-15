@@ -36,9 +36,9 @@ library(ggpubr)
     Calculation of melting scores over genomic regions of interest
     
 type
-'''
+```bash
 Rscript command_line_apps/matrix_wide_to_long.R --help 
-'''
+```
 for explanations
    
    
