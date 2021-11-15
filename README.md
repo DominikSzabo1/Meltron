@@ -25,11 +25,26 @@ library(ggpubr)
    Plots expression and chromatin accessibility as a function of the melting score per cell-type. Density plots with median lines indicate population trends. 
 - code/plot_domain_melting_gene_characteristics.R 
    Plots heatmaps and summary violin plots for each of the clusters.
+
+
+### Available command line scripts:
+- command_line_apps/matrix_wide_to_long.R: 
+    Converts a square matrix into a long matrix for IS calculation. Accepts wildcards for processing of multiple chromosomes.
+- command_line_apps/long_matrix_to_IS.R:
+    Calculates insulation scores at multiple distances (default 100kb - 1Mb, steps of 100kb).
+- command_line_apps/Meltron.R:
+    Calculation of melting scores over genomic regions of interest
+    
+type
+'''
+Rscript command_line_apps/matrix_wide_to_long.R --help 
+'''
+for explanations
+   
    
 Developed and tested with R version 3.6.0 Planting of a Tree.  
 Developed and maintained by Dominik Szabó [<img src="https://cloud.githubusercontent.com/assets/1810515/4228292/6b03dc88-3958-11e4-9094-d3c1771ccfea.png" width="15">](https://orcid.org/0000-0001-8109-5088) with intellectual input from Christoph Thieme [<img src="https://cloud.githubusercontent.com/assets/1810515/4228292/6b03dc88-3958-11e4-9094-d3c1771ccfea.png" width="15">](https://orcid.org/0000-0002-1566-0971).  
 Please get in touch for questions and issues: dominik.szabo at mdc-berlin.de  
-Command line tool that calculates melting scores for user-specified input is under development  
 
 
 Please check our preprint:  
