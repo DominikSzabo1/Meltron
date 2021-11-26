@@ -2,13 +2,13 @@
 
 _a statistical framework to detect differences in chromatin contact density at genomic regions of interest_
 
-[![DOI:10.1101/2020.04.02.020990](http://img.shields.io/badge/DOI-10.1101/2020.04.02.020990-B31B1B.svg)](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v3)
+[![DOI:10.1038/s41586-021-04081-2](http://img.shields.io/badge/DOI-10.1038/s41586-021-04081-2.svg)](https://www.nature.com/articles/s41586-021-04081-2)
 
 <img src="data/IS_gif.gif" width="350">
 
 <img src="./data/meltron_pipeline.png" width="900">
 
-Deposited scripts and files for calculation of [melting scores](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v1) of long genes in oligodendroglia (OLG) from the somatosensory cortex, dopaminergic neurons (DNs) from the midbrain VTA and pyramidal glutamatergic neurons (PGNs) from the hippocampus CA1 relative to embryonic stem cells (ESCs).
+Deposited scripts and files for calculation of [melting scores](https://www.nature.com/articles/s41586-021-04081-2) of long genes in oligodendroglia (OLG) from the somatosensory cortex, dopaminergic neurons (DNs) from the midbrain VTA and pyramidal glutamatergic neurons (PGNs) from the hippocampus CA1 relative to embryonic stem cells (ESCs).
 
 ### Required packages
 ```r
@@ -47,9 +47,9 @@ Developed and maintained by Dominik Szabó [<img src="https://cloud.githubuserco
 Please get in touch for questions and issues: dominik.szabo at mdc-berlin.de  
 
 
-Please check our preprint:  
+Please check our manuscript:  
 __Winick-Ng, W., Kukalev, A., Harabula, I., Zea Redondo, L., Szabó, D. et al.:  
-[Cell-type specialization in the brain is encoded by specific long-range chromatin topologies](https://www.biorxiv.org/content/10.1101/2020.04.02.020990v3)__
+[Cell-type specialization is encoded by specific chromatin topologies](https://www.nature.com/articles/s41586-021-04081-2)__
 
 
 
