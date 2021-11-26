@@ -2,7 +2,7 @@
 
 _a statistical framework to detect differences in chromatin contact density at genomic regions of interest_
 
-[![DOI:10.1038/s41586-021-04081-2](http://img.shields.io/badge/DOI-10.1038/s41586-021-04081-2.svg)](https://www.nature.com/articles/s41586-021-04081-2)
+[![DOI:10.1038/s41586-021-04081-2](https://zenodo.org/badge/DOI/110.1038/s41586-021-04081-2.svg)](https://www.nature.com/articles/s41586-021-04081-2)
 
 <img src="data/IS_gif.gif" width="350">
 
